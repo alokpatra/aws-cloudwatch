@@ -517,6 +517,7 @@ if ($report_mem_util || $report_mem_used || $report_mem_avail || $report_mem_buf
   my $mem_free = $meminfo{'MemFree'} * KILO;
   my $mem_cached = $meminfo{'Cached'} * KILO;
   my $mem_buffers = $meminfo{'Buffers'} * KILO;
+  my $mem_buffer = $meminfo{'Buffers'} * KILO;
   my $mem_avail = $mem_free;
   if (!defined($mem_used_incl_cache_buff)) {
      $mem_avail += $mem_cached + $mem_buffers;
