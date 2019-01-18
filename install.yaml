@@ -1,6 +1,41 @@
 ---
-- hosts: demo
-  gather_facts: no
+- hosts: staging
+  gather_facts: true
   become: true
+  remote-user: ec2-user
+#Install pre-requisites
   tasks:
-    - ping:
+    #Install pre-requisites
+  - name: Install prerequistes for Amazon Linux 2
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - perl-Switch
+      - perl-DateTime
+      - perl-Sys-Syslog
+      - perl-LWP-Protocol-https
+      - perl-Digest-SHA.x86_64
+      - git
+
+# Clone the github Repo
+  - name: Clone the repo from github
+    git:
+      repo: 'https://github.com/alokpatra/aws-cloudwatch.git'
+      dest: /home/ec2-user/AWS_Script
+
+# Execute the  perl Script
+  - name: Execute the shell script
+    command: sh /home/ec2-user/aws-cloudwatch/aws-scripts-mon/mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --verbose"
+    register: result
+
+  - name: Debug the result
+    debug:
+      var: result
+
+
+  - name: Ensure a job that runs at 2 and 5 exists. Creates an entry like "0 5,2 * * ls -alh > /dev/null"
+    cron:
+      name: "AWS Cloudwatch send metrics"
+      minute: "5"
+      job: "./mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --verbose"
