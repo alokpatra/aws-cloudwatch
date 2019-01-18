@@ -24,6 +24,7 @@ Description of available options:
 
   --mem-util          Reports memory utilization in percentages.
   --mem-used          Reports memory used in megabytes.
+  --mem-free          Reports free used in megabytes
   --mem-avail         Reports available memory in megabytes.
   --mem-buffer        Reports buffer memory in megabytes.
   --mem-cached        Reports cached memory in megabytes.
@@ -111,6 +112,7 @@ my $client_name = 'CloudWatch-PutInstanceData';
 my $mcount = 0;
 my $report_mem_util;
 my $report_mem_used;
+my $report_mem_free;
 my $report_mem_avail;
 my $report_mem_buffer;
 my $report_mem_cached;
@@ -150,6 +152,7 @@ my $argv_size = @ARGV;
     'version' => \$show_version,
     'mem-util' => \$report_mem_util,
     'mem-used' => \$report_mem_used,
+    'mem-free' => \$report_mem_free,
     'mem-avail' => \$report_mem_avail,
     'mem-buffer' => \$report_mem_buffer,
     'mem-cached' => \$report_mem_cached,
@@ -503,7 +506,7 @@ if ($from_cron) {
 
 # collect memory and swap metrics
 
-if ($report_mem_util || $report_mem_used || $report_mem_avail || $report_mem_buffer || $report_mem_cached || $report_swap_util || $report_swap_used)
+if ($report_mem_util || $report_mem_used || $report_mem_free || $report_mem_avail || $report_mem_buffer || $report_mem_cached || $report_swap_util || $report_swap_used)
 {
   my %meminfo;
   foreach my $line (split('\n', `/bin/cat /proc/meminfo`)) {
@@ -543,6 +546,9 @@ if ($report_mem_util || $report_mem_used || $report_mem_avail || $report_mem_buf
   }
   if ($report_mem_cached) {
     add_metric('MemoryCached', $mem_units, $mem_cached / $mem_unit_div);
+  }
+  if ($report_mem_free) {
+    add_metric('MemoryFree', $mem_units, $mem_free / $mem_unit_div);
   }
 
   if ($report_swap_util) {
