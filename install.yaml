@@ -3,9 +3,8 @@
   gather_facts: true
   become: true
   remote_user: ec2-user
-#Install pre-requisites
   tasks:
-  - ping:
+  - ping
 
 #Install pre-requisites
   - name: Install prerequistes for Amazon Linux 2
@@ -19,16 +18,16 @@
       - perl-LWP-Protocol-https
       - perl-Digest-SHA.x86_64
       - git
-    tags: 
-      - test
+#    tags: 
+#      - test
 
 # Clone the github Repo
   - name: Clone the repo from github
     git:
       repo: 'https://github.com/alokpatra/aws-cloudwatch.git'
       dest: /home/ec2-user/AWS_Script
-    tags:
-      - test
+#    tags:
+#      - test
 
 # Execute the  perl Script
   - name: Execute the shell script
@@ -36,20 +35,14 @@
     args:
       chdir: /home/ec2-user/AWS_Script/aws-scripts-mon
     register: result
-    tags: 
-      - test1
 
-  - name: Debug the result
-    debug:
-      var: result
-    tags: 
-      - test1
+#  - name: Debug the result
+#    debug:
+#      var: result
 
-
+# Set the cron job in root user
   - name: Ensure a job that runs at 2 and 5 exists. Creates an entry like "0 5,2 * * ls -alh > /dev/null"
     cron:
       name: "AWS Cloudwatch send metrics"
       minute: "5"
       job: "/home/ec2-user/AWS_Script/aws-scripts-mon/mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --verbose"
-    tags:
-      - test2
