@@ -1,5 +1,5 @@
 ---
-- hosts: prod
+- hosts: demo
   gather_facts: true
   become: true
   remote_user: ec2-user

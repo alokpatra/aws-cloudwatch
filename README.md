@@ -27,7 +27,7 @@ I have used Option 1 which avoids the need to export keys to the server which ca
 Although 'Used Memory' maybe just 30-40%, there are times when the buffered/ cached memory is held back and not released, hence depriving your applications of memory.
 
 # What do the playbooks exactly do?
-- Identifies the OS
+- Identifies the Distribution
 - Installs the pre-requisites as per th OS flavour
 - Clones the repo which is using the aws-cloud-agent script to fetch metrics from the servers.
 - Sets the cron in root user
@@ -50,5 +50,5 @@ Memory Cached(in MB)
 Memory Used(in MB)
 Memory Free(in MB)
 Memory Available(in MB)
-On the managed instance which you want to monitor, you can verify by manually installing the 
+On the managed instance which you want to monitor, you can verify by manually installing the
 $ ./mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --verbose --verify
