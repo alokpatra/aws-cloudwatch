@@ -1,5 +1,13 @@
 # Read Me
 
+# Updates
+Date of Release: 25th Jan 2019
+Release No: V1.1
+Additions
+- Support for Ubuntu
+- Check the Distributions
+- Set frequency for exporting the metrics. Default is every 5mins.
+
 This contains ansible playbooks to deploy / install the aws-cloudwatch-agent on VMs and set the cron job to export the metrics to cloudwatch.
 The agent is required to capture the memory and disk metrics that are NOT available by default on Cloudwatch.
 Minor changes to the perl script ( provided by AWS ) have been done to also export other memory metrics which I found quite useful. The metrics in additions to the base script provided by amazon are:
@@ -16,10 +24,14 @@ Minor changes to the perl script ( provided by AWS ) have been done to also expo
 - Ubuntu 16 (Currently Unavailable)
 
 # Prerequistes
+1. Ansible (Ansible Version = 2.7)
+2. Cloudwatch access to Amazon EC2
+3. SSH access to the hosts where you want the agent installed, since ansible uses SSH to connect to managed hosts.
+
 To export the meterics to Cloudwatch from EC2, AWS EC2 would require to access to export metrics to AWS Cloudwatch.
-This can be given in 2 ways:
-1. Attach a role to the Instances allowing EC2 Service access to Cloudwatch Service (Reccomended).
-2. The other alternative is to export the keys to the servers. (Playbooks not updated for this option yet)  
+This can be done in 2 ways:
+Option 1: Attach a role to the Instances allowing EC2 Service access to Cloudwatch Service (Reccomended).
+Option 2: The other alternative is to export the keys to the servers. (Playbooks not updated for this option yet)  
 
 I have used Option 1 which avoids the need to export keys to the server which can be a security concern. It is also difficult to rotate the credentials subsequently.
 
@@ -33,7 +45,7 @@ Although 'Used Memory' maybe just 30-40%, there are times when the buffered/ cac
 - Sets the cron in root user
 
 # Pre-requisite installations done on the instances / servers
-The following packages are installed by the playbooks as per the OS flavour.
+The following packages are installed by the playbooks as per the distribution.
 
 For Amazon Linux and Amazon Linux 2
 
@@ -41,6 +53,9 @@ $ sudo yum install -y perl-Switch perl-DateTime perl-Sys-Syslog perl-LWP-Protoco
 
 For Ubuntu 18 (Currently Unavailable)
 
+
+#How to run the playbooks ?
+- Populate the hosts file with the hosts / IP's
 
 # To manually verify the script is working
 It will fetch the following metrics
@@ -50,5 +65,6 @@ Memory Cached(in MB)
 Memory Used(in MB)
 Memory Free(in MB)
 Memory Available(in MB)
-On the managed instance which you want to monitor, you can verify by manually installing the
+On the managed instance which you want to monitor, you can verify by manually running the following command
+
 $ ./mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --verbose --verify

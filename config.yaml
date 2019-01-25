@@ -1,0 +1,2 @@
+#This sets the frequency (every min) at which the metrics are sent to Cloudwatch
+frequency: 5

@@ -1,0 +1,61 @@
+---
+# tasks file for cloudwatch-agent
+
+
+# - name: Clone the repo from github
+#   git:
+#     repo: 'https://github.com/alokpatra/aws-cloudwatch.git'
+#     dest: /home/{{ssh_user}}/AWS_Script
+
+- name: Set the value for based on the ansible distribution
+  set_fact:
+    ssh_user: ubuntu
+  when: ansible_distribution == 'Ubuntu'
+
+- name:
+  set_fact:
+    ssh_user: ec2-user
+  when: ansible_distribution == 'Amazon'
+
+- name: Include Playbook for installing pre-requisites for Amazon Linux
+  include_tasks: amazon.yaml
+  when: ansible_distribution == 'Amazon'
+
+- name: Include Playbook for installing pre-requisites for Ubuntu
+  include_tasks: ubuntu.yaml
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Create the directory
+  file:
+    path: /home/{{ssh_user}}/AWS_Script
+    state: directory
+    owner: "{{ssh_user}}"
+    group: "{{ssh_user}}"
+    mode: 0755
+
+- name: Copying all files
+  copy:
+    src: "{{ role_path }}/files/"
+    dest: /home/{{ssh_user}}/AWS_Script/.
+    owner: "{{ssh_user}}"
+    group: "{{ssh_user}}"
+    mode: a+x
+
+#This task is to verify that the script will run and if failed would prevent an incorrect cron is not set in the next task
+- name: This task is to test the execution of the perl script before adding to the cron job.
+  shell: ./mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --disk-space-util --disk-path=/ --verbose
+  args:
+    chdir: /home/{{ssh_user}}/AWS_Script
+  register: result
+  sudo: yes
+
+- name: Debug the result
+  debug:
+    var: result
+
+# Set the cron job in root user
+- name: This creates a crob job entry in the root user that runs every 5 minutes
+  cron:
+    name: "AWS Cloudwatch send metrics"
+    minute: "*/{{frequency}}"
+    job: "/home/{{ssh_user}}/AWS_Script/mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --disk-space-util --disk-path=/"

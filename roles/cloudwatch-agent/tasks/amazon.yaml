@@ -1,0 +1,14 @@
+# Install pre-requisites
+- name: Install prerequistes for Amazon Linux 2
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - perl-Switch
+    - perl-DateTime
+    - perl-Sys-Syslog
+    - perl-LWP-Protocol-https
+    - perl-Digest-SHA.x86_64
+    - git
+  tags:
+    - test
