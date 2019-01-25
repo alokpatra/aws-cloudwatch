@@ -1,0 +1,6 @@
+---
+- hosts: ubuntu
+  gather_facts: true
+  vars_files: config.yaml
+  roles:
+     - cloudwatch-agent

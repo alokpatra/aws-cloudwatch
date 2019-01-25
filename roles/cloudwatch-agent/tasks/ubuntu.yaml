@@ -1,0 +1,15 @@
+# Install pre-requisites
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    upgrade: yes
+
+- name: Install prerequistes for Ubuntu
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+      - libwww-perl
+      - libdatetime-perl
+      - git
+      - unzip
