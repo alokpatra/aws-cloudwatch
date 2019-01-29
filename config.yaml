@@ -1,2 +1,3 @@
 #This sets the frequency (every min) at which the metrics are sent to Cloudwatch
+#Edit this value to ammend the frequency at which you want to send the metrics
 frequency: 5

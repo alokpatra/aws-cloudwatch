@@ -7,6 +7,7 @@ Additions
 - Parameterizes the frequency for exporting metrics. Default is every 5mins
 - Disk Usage
 
+# Introduction
 This contains ansible playbooks to deploy / install the aws-cloudwatch-agent on VMs and set the cron job to export the metrics to cloudwatch.
 The agent is required to capture the memory and disk metrics that are NOT available by default on Cloudwatch.
 Minor changes to the perl script ( provided by AWS ) have been done to also export other memory metrics which I found quite useful. The metrics in additions to the base script provided by amazon are:
@@ -20,7 +21,9 @@ Minor changes to the perl script ( provided by AWS ) have been done to also expo
 
 ### Terminology Used:
 I would be using the following terminologies subsequently in my post.
+
 Host Machine: This is the machine where you would be cloning the Github repository.
+
 Target Machines: These are the machines which you want to monitor.
 
 ## Supported OS Versions
@@ -70,6 +73,11 @@ file roles/cloudwatch-agent/tests/inventory
 
 
 ## To manually verify the script is working
+
+On the managed instance which you want to monitor, you can verify by manually running the following command
+
+`$ ./mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail  --disk-space-util --disk-path=/ --verbose --verify`
+
 It will fetch the following metrics
 Memory Utilized(in %)
 Memory Buffers(in MB)
@@ -77,6 +85,7 @@ Memory Cached(in MB)
 Memory Used(in MB)
 Memory Free(in MB)
 Memory Available(in MB)
-On the managed instance which you want to monitor, you can verify by manually running the following command
+Disk Usage (in GB)
 
-`$ ./mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --verbose --verify`
+MH 14 FC 9934
+Swift Desire
