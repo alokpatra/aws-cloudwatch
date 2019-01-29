@@ -1,7 +1,8 @@
 # Updates
 Date of Release: 25th Jan 2019
 Release No: V1.1
-Additions
+
+###### Additions
 - Support for Ubuntu
 - Checks the OS distributions and installs the Prerequistes packages on the server accrodingly.
 - Parameterizes the frequency for exporting metrics. Default is every 5mins
@@ -38,24 +39,29 @@ Target Machines: These are the machines which you want to monitor.
 To export the meterics to Cloudwatch from EC2, AWS EC2 would require to access to export metrics to AWS Cloudwatch.
 This can be done in 2 ways:
 
-### Option 1:
+###### Option 1:
 
 Attach a role to the Instances allowing EC2 Service access to Cloudwatch Service (Reccomended).
 
-### Option 2:
+###### Option 2:
 
 The other alternative is to export the keys to the servers. (Playbooks not updated for this option yet)  
 
 I have used Option 1 which avoids the need to export keys to the server which can be a security concern. It is also difficult to rotate the credentials subsequently.
 
-## Why are these metrics required?
-Although 'Used Memory' maybe just 30-40%, there are times when the buffered/ cached memory is held back and not released, hence depriving your applications of memory.
+## Why did I create these playbooks? Why use custom metrics to monitor?
+
+Memory metrics are NOT provided by AWS CloudWatch by default and require an agent to be installed. I have automated the steps to install the agent and added a few features.
+
+The base script provided by Amazon didn’t output some metrics to be exported to CloudWatch like buffer memory and cached which didn’t give a clear picture of the about the memory. There were times when the free memory would indicate 1-2GB but the cached/buffer would be consuming that memory and NOT releasing it, thereby depriving your applications of memory.
+
+Installing the agent on each server and adding to the cron was a pain. Especially if you frequently create and destroy VMS. Why not just use Ansible to install it in one go to multiple servers?
 
 ## What do the playbooks exactly do?
 - Identifies the Distribution
 - Installs the pre-requisites as per th OS flavour
-- Clones the repo which is using the aws-cloud-agent script to fetch metrics from the servers.
-- Sets the cron in root user
+- Installs the prerequisite packages based on the distribution
+- Sets the cron job to fetch and export the metrics  
 
 ## Pre-requisite installations done on the instances / servers
 The following packages are installed by the playbooks as per the distribution.
