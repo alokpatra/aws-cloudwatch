@@ -2,7 +2,7 @@
 Date of Release: 25th Jan 2019
 Release No: V1.1
 
-###### Additions
+#### Additions
 - Support for Ubuntu
 - Checks the OS distributions and installs the Prerequistes packages on the server accrodingly.
 - Parameterizes the frequency for exporting metrics. Default is every 5mins
@@ -27,43 +27,53 @@ Host Machine: This is the machine where you would be cloning the Github reposito
 
 Target Machines: These are the machines which you want to monitor.
 
+## Why did I create these playbooks? Why use custom metrics to monitor?
+
+- Memory metrics are NOT provided by AWS CloudWatch by default and require an agent to be installed. I have automated the steps to install the agent and added a few features.
+
+- The base script provided by Amazon didn’t output some metrics to be exported to CloudWatch like buffer memory and cached which didn’t give a clear picture of the about the memory. There were times when the free memory would indicate 1-2GB but the cached/buffer would be consuming that memory and NOT releasing it, thereby depriving your applications of memory.
+
+- Installing the agent on each server and adding to the cron was a pain. Especially if you frequently create and destroy VMS. Why not just use Ansible to install it in one go to multiple servers?
+
 ## Supported OS Versions
 - Amazon Linux 2
 - Ubuntu
 
 ## Prerequistes
-1. Ansible (Ansible Version = 2.7) to be installed on the Host Machine to deploy the scripts on the target machines/servers.
-2. Cloudwatch access to Amazon EC2. The ec2 instaces need to have access to push metrics to Cloudwatch. So an IAM role is created and attached to the instances.
-3. SSH access to the tacget hosts ie the hosts where you want the agent installed, since ansible uses SSH to connect to managed hosts.
+1. Ansible (I have used Ansible Version 2.7) to be installed on the Host Machine to deploy the scripts on the target machines/servers.
 
-To export the meterics to Cloudwatch from EC2, AWS EC2 would require to access to export metrics to AWS Cloudwatch.
-This can be done in 2 ways:
+- To install ansible on Ubuntu you can run the following commands or follow this (https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-ubuntu-18-04)
 
-###### Option 1:
+$ sudo apt update
+$ sudo apt install software-properties-common
+$ sudo apt-add-repository ppa:ansible/ansible
+$ sudo apt update
+$ sudo apt install ansible
 
-Attach a role to the Instances allowing EC2 Service access to Cloudwatch Service (Reccomended).
+- On Amazon Linux 2 you just need to run the following commands - obviously there is no Digital Ocean Guide to follow
 
-###### Option 2:
+$ sudo yum-config-manager --enable epel
+$ yum repolist ( you should see epel)
+$ yum install ansible
 
-The other alternative is to export the keys to the servers. (Playbooks not updated for this option yet)  
 
-I have used Option 1 which avoids the need to export keys to the server which can be a security concern. It is also difficult to rotate the credentials subsequently.
 
-## Why did I create these playbooks? Why use custom metrics to monitor?
 
-Memory metrics are NOT provided by AWS CloudWatch by default and require an agent to be installed. I have automated the steps to install the agent and added a few features.
+2. Cloudwatch access to Amazon EC2. The ec2 instaces need to have access to push metrics to Cloudwatch. So you need to attach an IAM role ‘EC2AccessToCloudwatch’ to the target hosts you want to monitor. The other alternative is to export the keys to the servers. (Playbooks not updated for this option yet). I have used the IAM option which avoids the need to export keys to the server which can be a security concern. It is also difficult to rotate the credentials subsequently.
+3. SSH access to the target hosts i.e. the hosts where you want the agent installed, since ansible uses SSH to connect to managed hosts.
 
-The base script provided by Amazon didn’t output some metrics to be exported to CloudWatch like buffer memory and cached which didn’t give a clear picture of the about the memory. There were times when the free memory would indicate 1-2GB but the cached/buffer would be consuming that memory and NOT releasing it, thereby depriving your applications of memory.
-
-Installing the agent on each server and adding to the cron was a pain. Especially if you frequently create and destroy VMS. Why not just use Ansible to install it in one go to multiple servers?
+## How to run the playbooks ?
+- Populate the hosts file with the hosts / IP's. A sample host file is present in the repo
+- Run the main playbbok with inturn calls the role cloudwatch-agent
+`$ ansible-playbook -i hosts installer.yaml`
 
 ## What do the playbooks exactly do?
 - Identifies the Distribution
 - Installs the pre-requisites as per th OS flavour
 - Installs the prerequisite packages based on the distribution
-- Sets the cron job to fetch and export the metrics  
+- Sets the cron job to fetch and export the metrics
 
-## Pre-requisite installations done on the instances / servers
+## Packages installed on the target machines prior to running the scripts.
 The following packages are installed by the playbooks as per the distribution.
 
 ### For Amazon Linux and Amazon Linux 2
@@ -78,11 +88,6 @@ The following packages are installed on Amazon Linux 2 server
 The following packages are installed on Ubuntu Server
 - libwww-perl
 - libdatetime-perl
-
-## How to run the playbooks ?
-- Populate the hosts file with the hosts / IP's. A sample host file is provided in the
-file roles/cloudwatch-agent/tests/inventory
-
 
 ## To manually verify the script is working
 
