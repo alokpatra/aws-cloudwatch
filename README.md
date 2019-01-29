@@ -38,11 +38,11 @@ Target Machines: These are the machines which you want to monitor.
 To export the meterics to Cloudwatch from EC2, AWS EC2 would require to access to export metrics to AWS Cloudwatch.
 This can be done in 2 ways:
 
-####Option 1:
+### Option 1:
 
 Attach a role to the Instances allowing EC2 Service access to Cloudwatch Service (Reccomended).
 
-####Option 2: 
+### Option 2:
 
 The other alternative is to export the keys to the servers. (Playbooks not updated for this option yet)  
 
