@@ -1,18 +1,11 @@
 ---
 # tasks file for cloudwatch-agent
-
-
-# - name: Clone the repo from github
-#   git:
-#     repo: 'https://github.com/alokpatra/aws-cloudwatch.git'
-#     dest: /home/{{ssh_user}}/AWS_Script
-
-- name: Set the value for based on the ansible distribution
+- name: Set the value for ssh user for Ubuntu server based on the ansible distribution
   set_fact:
     ssh_user: ubuntu
   when: ansible_distribution == 'Ubuntu'
 
-- name:
+- name: Set the value for ssh user for Amazon server based on the ansible distribution
   set_fact:
     ssh_user: ec2-user
   when: ansible_distribution == 'Amazon'
@@ -25,7 +18,7 @@
   include_tasks: ubuntu.yaml
   when: ansible_distribution == 'Ubuntu'
 
-- name: Create the directory
+- name: Create the directory for the copying the scripts on the remote server 
   file:
     path: /home/{{ssh_user}}/AWS_Script
     state: directory
