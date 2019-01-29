@@ -37,8 +37,14 @@ Target Machines: These are the machines which you want to monitor.
 
 To export the meterics to Cloudwatch from EC2, AWS EC2 would require to access to export metrics to AWS Cloudwatch.
 This can be done in 2 ways:
-Option 1: Attach a role to the Instances allowing EC2 Service access to Cloudwatch Service (Reccomended).
-Option 2: The other alternative is to export the keys to the servers. (Playbooks not updated for this option yet)  
+
+####Option 1:
+
+Attach a role to the Instances allowing EC2 Service access to Cloudwatch Service (Reccomended).
+
+####Option 2: 
+
+The other alternative is to export the keys to the servers. (Playbooks not updated for this option yet)  
 
 I have used Option 1 which avoids the need to export keys to the server which can be a security concern. It is also difficult to rotate the credentials subsequently.
 
@@ -86,6 +92,3 @@ Memory Used(in MB)
 Memory Free(in MB)
 Memory Available(in MB)
 Disk Usage (in GB)
-
-MH 14 FC 9934
-Swift Desire
