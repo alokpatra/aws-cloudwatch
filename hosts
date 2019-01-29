@@ -1,4 +1,8 @@
-localhost
+#Ensure you keep different different flavours of OS in different groups.
+#Then accordingly you can add the respective host group in the main 'installer.yaml' file to trigger the playbooks.
+[amazon]
+10.2.113.149 ansible_user=ec2-user ansible_ssh_private_key_file=demo.pem
+10.2.113.135 ansible_user=ec2-user ansible_ssh_private_key_file=demo.pem
 
-[demo]
-3.82.125.162 ansible_user=ec2-user ansible_ssh_private_key_file=/home/alokp/work/Credentials/PEM_Files/aws-eb-alok
+[ubuntu]
+10.6.94.247 ansible_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file=demo.pem
