@@ -64,8 +64,9 @@ $ yum install ansible`
 ## How to run the playbooks ?
 - Populate the hosts file with the hosts / IP's. A sample host file is present in the repo
 - Run the main playbbok with inturn calls the role cloudwatch-agent
-`
-$ ansible-playbook -i hosts installer.yaml`
+```
+$ ansible-playbook -i hosts installer.yaml -vv
+```
 
 ## What do the playbooks exactly do?
 - Identifies the Distribution
