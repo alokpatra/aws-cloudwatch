@@ -44,19 +44,29 @@ Target Machines: These are the machines which you want to monitor.
 
 - To install ansible on Ubuntu you can run the following commands or follow this (https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-ansible-on-ubuntu-18-04)
 
-`
+```
+
 $ sudo apt update
+
 $ sudo apt install software-properties-common
+
 $ sudo apt-add-repository ppa:ansible/ansible
+
 $ sudo apt update
-$ sudo apt install ansible`
+
+$ sudo apt install ansible
+```
 
 - On Amazon Linux 2 you just need to run the following commands - obviously there is no Digital Ocean Guide to follow
 
-`
+```
+
 $ sudo yum-config-manager --enable epel
+
 $ yum repolist ( you should see epel)
-$ yum install ansible`
+
+$ yum install ansible
+```
 
 2. Cloudwatch access to Amazon EC2. The ec2 instaces need to have access to push metrics to Cloudwatch. So you need to attach an IAM role ‘EC2AccessToCloudwatch’ to the target hosts you want to monitor. The other alternative is to export the keys to the servers. (Playbooks not updated for this option yet). I have used the IAM option which avoids the need to export keys to the server which can be a security concern. It is also difficult to rotate the credentials subsequently. To attach a role go to the Instance section of  the AWS Console. Select the instance > Click on Actions > Instance Settings > Attach Replace IAM Role.
 3. SSH access to the target hosts i.e. the hosts where you want the agent installed, since ansible uses SSH to connect to managed hosts.
@@ -64,8 +74,9 @@ $ yum install ansible`
 ## How to run the playbooks ?
 - Populate the hosts file with the hosts / IP's. A sample host file is present in the repo
 - Run the main playbbok with inturn calls the role cloudwatch-agent
-`
-$ ansible-playbook -i hosts installer.yaml`
+```
+$ ansible-playbook -i hosts installer.yaml -vv
+```
 
 ## What do the playbooks exactly do?
 - Identifies the Distribution
@@ -91,9 +102,11 @@ The following packages are installed on Ubuntu Server
 
 ## To manually verify the script is working
 
-On the managed instance which you want to monitor, you can verify by manually running the following command
+On the managed instance which you want to monitor, you can verify by manually navigating to the folder '/home/<user>/AWS_Scripts' and executing the perl script with the parameters as follows
 
-`$ ./mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail  --disk-space-util --disk-path=/ --verbose --verify`
+```
+$ ./mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail  --disk-space-util --disk-path=/ --verbose --verify
+```
 
 It will fetch the following metrics
 Memory Utilized(in %)

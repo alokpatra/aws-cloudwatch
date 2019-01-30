@@ -18,9 +18,9 @@
   include_tasks: ubuntu.yaml
   when: ansible_distribution == 'Ubuntu'
 
-- name: Create the directory for the copying the scripts on the remote server 
+- name: Create the directory for the copying the scripts on the remote server
   file:
-    path: /home/{{ssh_user}}/AWS_Script
+    path: /home/{{ssh_user}}/AWS_Scripts
     state: directory
     owner: "{{ssh_user}}"
     group: "{{ssh_user}}"
@@ -29,7 +29,7 @@
 - name: Copying all files
   copy:
     src: "{{ role_path }}/files/"
-    dest: /home/{{ssh_user}}/AWS_Script/.
+    dest: /home/{{ssh_user}}/AWS_Scripts/.
     owner: "{{ssh_user}}"
     group: "{{ssh_user}}"
     mode: a+x
@@ -38,7 +38,7 @@
 - name: This task is to test the execution of the perl script before adding to the cron job.
   shell: ./mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --disk-space-util --disk-path=/ --verbose
   args:
-    chdir: /home/{{ssh_user}}/AWS_Script
+    chdir: /home/{{ssh_user}}/AWS_Scripts
   register: result
   sudo: yes
 
@@ -51,4 +51,4 @@
   cron:
     name: "AWS Cloudwatch send metrics"
     minute: "*/{{frequency}}"
-    job: "/home/{{ssh_user}}/AWS_Script/mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --disk-space-util --disk-path=/"
+    job: "/home/{{ssh_user}}/AWS_Scripts/mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --disk-space-util --disk-path=/"
