@@ -88,7 +88,9 @@ file roles/cloudwatch-agent/tests/inventory
 
 On the managed instance which you want to monitor, you can verify by manually running the following command
 
-`$ ./mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail  --disk-space-util --disk-path=/ --verbose --verify`
+```
+$ ./mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail  --disk-space-util --disk-path=/ --verbose --verify
+```
 
 It will fetch the following metrics
 Memory Utilized(in %)
