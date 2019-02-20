@@ -5,6 +5,7 @@
     upgrade: yes
 
 - name: Install prerequistes for Ubuntu
+  become: true
   apt:
     name: "{{ packages }}"
   vars:

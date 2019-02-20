@@ -1,0 +1,15 @@
+# Install pre-requisites
+- name: Install prerequistes for Centos 7
+  become: true
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - perl-Switch
+    - perl-DateTime
+    - perl-Sys-Syslog
+    - perl-LWP-Protocol-https
+    - perl-Digest-SHA.x86_64
+    - git
+  tags:
+    - test

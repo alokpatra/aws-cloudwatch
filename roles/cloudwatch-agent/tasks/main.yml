@@ -10,13 +10,22 @@
     ssh_user: ec2-user
   when: ansible_distribution == 'Amazon'
 
-- name: Include Playbook for installing pre-requisites for Amazon Linux
-  include_tasks: amazon.yaml
-  when: ansible_distribution == 'Amazon'
+- name: Set the value for ssh user for CentOS 7 server based on the ansible distribution
+  set_fact:
+    ssh_user: centos
+  when: ansible_distribution == 'CentOS'
 
 - name: Include Playbook for installing pre-requisites for Ubuntu
   include_tasks: ubuntu.yaml
   when: ansible_distribution == 'Ubuntu'
+
+- name: Include Playbook for installing pre-requisites for Amazon Linux
+  include_tasks: amazon.yaml
+  when: ansible_distribution == 'Amazon'
+
+- name: Include Playbook for installing pre-requisites for CentOS 7
+  include_tasks: centos.yaml
+  when: ansible_distribution == 'CentOS'
 
 - name: Create the directory for the copying the scripts on the remote server
   file:
@@ -51,4 +60,4 @@
   cron:
     name: "AWS Cloudwatch send metrics"
     minute: "*/{{frequency}}"
-    job: "/home/{{ssh_user}}/AWS_Scripts/mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --disk-space-util --disk-path=/"
+    job: "/home/{{ssh_user}}/AWS_Scripts/mon-put-instance-data.pl --mem-util --mem-buffer --mem-cached --mem-used --mem-free --mem-avail --disk-space-util --disk-path=/ --disk-path=/var/lib/docker/"
